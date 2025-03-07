@@ -23,7 +23,7 @@ public class Exer4 {
 	}
 	
 	public static void main(String[] args) {
-		int decimal = 45;
+		int decimal = 255;
 		System.out.println(Arrays.toString(converteDecimal(decimal)));
 	}
 }
