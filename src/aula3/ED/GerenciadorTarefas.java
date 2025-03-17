@@ -1,3 +1,5 @@
+package aula3.ED;
+
 public class GerenciadorTarefas {
     
     private TarefaPrioritaria tfPrior = new TarefaPrioritaria();
