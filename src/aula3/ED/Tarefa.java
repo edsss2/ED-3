@@ -1,3 +1,6 @@
+package aula3.ED;
+
+
 public class Tarefa {
 
     private String tarefa;

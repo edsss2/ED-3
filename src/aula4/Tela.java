@@ -35,7 +35,7 @@ public class Tela extends JFrame {
         jList1 = new JList<>();
         lblNameJodador = new JTextField();
 
-        JButton[] botoes = {btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9};
+        botoes = new JButton[]{btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9};
         for(JButton btn : botoes) {
             btn.setPreferredSize(new java.awt.Dimension(50, 50));
             addListenerToBtn(btn);
@@ -47,6 +47,7 @@ public class Tela extends JFrame {
 
         btnIniciar.setBackground(new java.awt.Color(153, 255, 0));
         btnIniciar.setText("Iniciar");
+        btnIniciar.addActionListener(this :: btnIniciarActionPerformed);
 
         lblRodada.setText("RODADA:");
 
@@ -176,6 +177,21 @@ public class Tela extends JFrame {
     private void btnMouseClicked(MouseEvent evt, JButton btn) {
         btn.setBackground(Color.RED);
     }
+    
+    private void btnIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarActionPerformed
+    	// Controla que a rodada está em execução
+    	rodadaIniciada(true);
+    	// Prepara o array de botões
+    	// Chama o método piscarBotoes com um callback para quando terminar
+    	PintarBotoes.piscarBotoes(botoes, 500, () -> {
+    		// Esta parte será executada quando a animação terminar
+    		JOptionPane.showMessageDialog(rootPane, "Agora é sua vez!");
+    	});
+    }//GEN-LAST:event_btoIniciarActionPerformed
+    //Implemente o restante do código para controle de execução da rodada
+    private void rodadaIniciada(boolean estado){
+    	btnIniciar.setEnabled(!estado);
+    }
 
     /**
      * @param args the command line arguments
@@ -225,5 +241,6 @@ public class Tela extends JFrame {
     private JList<String> jList1;
     private JScrollPane scrollPane;
     private JTextField lblNameJodador;
+    private JButton[] botoes;
     // End of variables declaration//GEN-END:variables
 }

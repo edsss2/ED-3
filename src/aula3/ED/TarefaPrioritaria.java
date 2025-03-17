@@ -1,3 +1,6 @@
+package aula3.ED;
+
+
 public class TarefaPrioritaria extends ListaDeTarefas {
 
     private int topo = 0;
