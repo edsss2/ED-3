@@ -1,12 +1,29 @@
 package aula4;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.*;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 
 public class Tela extends JFrame {
 
@@ -33,12 +50,14 @@ public class Tela extends JFrame {
         jcbDificuldade = new JComboBox<>();
         scrollPane = new JScrollPane();
         jList1 = new JList<>();
-        lblNameJodador = new JTextField();
+        lblNomeJogador = new JTextField();
 
         botoes = new JButton[]{btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9};
-        for(JButton btn : botoes) {
+        for(int i = 0; i < botoes.length; i++) {
+        	JButton btn = botoes[i];
             btn.setPreferredSize(new java.awt.Dimension(50, 50));
-            addListenerToBtn(btn);
+            btn.setBackground(Color.WHITE);
+            addListenerToBtn(btn, i);
         }
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -49,7 +68,7 @@ public class Tela extends JFrame {
         btnIniciar.setText("Iniciar");
         btnIniciar.addActionListener(this :: btnIniciarActionPerformed);
 
-        lblRodada.setText("RODADA:");
+        lblRodada.setText("RODADA: " + rodada);
 
         lblPontuacao.setText("PONTUAÇÃO:");
 
@@ -59,139 +78,170 @@ public class Tela extends JFrame {
 
         jcbDificuldade.setModel(new DefaultComboBoxModel<>(new String[] { "Fácil", "Médio", "Díficil" }));
 
-        jList1.setModel(new AbstractListModel<String>() {
-            String[] strings = { "Jogador: Pontuação" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
+        listModel = new DefaultListModel<>();
+        jList1.setModel(listModel);
         scrollPane.setViewportView(jList1);
 
-        lblNameJodador.setText("Nome do Jogador");
+        lblNomeJogador.setText("Nome do Jogador");
 
         GroupLayout layout = new GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(btnIniciar, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addComponent(jcbDificuldade, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblDificuldade, GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addComponent(lblRodada, GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblPontuacao, GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(lblNameJodador, GroupLayout.PREFERRED_SIZE, 195, GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                    .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addComponent(btn5, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(btn4, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(btn6, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addComponent(btn3, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(btn1, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(btn2, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE))))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btn9, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btn8, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btn7, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)))
-                        .addGap(12, 12, 12)
-                        .addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 195, GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(lblInfo, GroupLayout.PREFERRED_SIZE, 217, GroupLayout.PREFERRED_SIZE)
-                .addGap(228, 228, 228))
+        	layout.createParallelGroup(Alignment.TRAILING)
+        		.addGroup(layout.createSequentialGroup()
+        			.addGroup(layout.createParallelGroup(Alignment.LEADING)
+        				.addGroup(layout.createSequentialGroup()
+        					.addContainerGap()
+        					.addComponent(btnIniciar, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)
+        					.addGap(18)
+        					.addGroup(layout.createParallelGroup(Alignment.LEADING)
+        						.addComponent(jcbDificuldade, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)
+        						.addComponent(lblDificuldade, GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE))
+        					.addPreferredGap(ComponentPlacement.UNRELATED)
+        					.addGroup(layout.createParallelGroup(Alignment.LEADING)
+        						.addComponent(lblRodada, GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE)
+        						.addGroup(layout.createSequentialGroup()
+        							.addComponent(lblPontuacao, GroupLayout.PREFERRED_SIZE, 143, GroupLayout.PREFERRED_SIZE)
+        							.addPreferredGap(ComponentPlacement.UNRELATED)
+        							.addComponent(lblNomeJogador, GroupLayout.PREFERRED_SIZE, 195, GroupLayout.PREFERRED_SIZE))))
+        				.addGroup(layout.createSequentialGroup()
+        					.addGroup(layout.createParallelGroup(Alignment.LEADING)
+        						.addGroup(layout.createSequentialGroup()
+        							.addContainerGap()
+        							.addGroup(layout.createParallelGroup(Alignment.TRAILING)
+        								.addGroup(layout.createSequentialGroup()
+        									.addComponent(btn5, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)
+        									.addPreferredGap(ComponentPlacement.UNRELATED)
+        									.addComponent(btn4, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)
+        									.addPreferredGap(ComponentPlacement.UNRELATED)
+        									.addComponent(btn6, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE))
+        								.addGroup(layout.createSequentialGroup()
+        									.addComponent(btn3, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)
+        									.addPreferredGap(ComponentPlacement.UNRELATED)
+        									.addComponent(btn1, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)
+        									.addPreferredGap(ComponentPlacement.UNRELATED)
+        									.addComponent(btn2, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE))))
+        						.addGroup(layout.createSequentialGroup()
+        							.addComponent(btn9, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)
+        							.addPreferredGap(ComponentPlacement.UNRELATED)
+        							.addComponent(btn8, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)
+        							.addPreferredGap(ComponentPlacement.UNRELATED)
+        							.addComponent(btn7, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)))
+        					.addGap(12)
+        					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 195, GroupLayout.PREFERRED_SIZE)))
+        			.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        		.addGroup(layout.createSequentialGroup()
+        			.addGap(0, 249, Short.MAX_VALUE)
+        			.addComponent(lblInfo, GroupLayout.PREFERRED_SIZE, 217, GroupLayout.PREFERRED_SIZE)
+        			.addGap(228))
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lblInfo)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addComponent(lblRodada)
-                            .addComponent(lblDificuldade, GroupLayout.Alignment.TRAILING))
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(jcbDificuldade, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblNameJodador, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblPontuacao))
-                                .addGap(0, 0, Short.MAX_VALUE))))
-                    .addComponent(btnIniciar, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                            .addComponent(btn1, GroupLayout.PREFERRED_SIZE, 137, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btn2, GroupLayout.PREFERRED_SIZE, 137, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btn3, GroupLayout.PREFERRED_SIZE, 137, GroupLayout.PREFERRED_SIZE))
-                        .addGap(15, 15, 15)
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                            .addComponent(btn4, GroupLayout.PREFERRED_SIZE, 137, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btn6, GroupLayout.PREFERRED_SIZE, 137, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btn5, GroupLayout.PREFERRED_SIZE, 137, GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                            .addComponent(btn8, GroupLayout.PREFERRED_SIZE, 137, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btn7, GroupLayout.PREFERRED_SIZE, 137, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btn9, GroupLayout.PREFERRED_SIZE, 137, GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(scrollPane))
-                .addContainerGap())
+        	layout.createParallelGroup(Alignment.TRAILING)
+        		.addGroup(layout.createSequentialGroup()
+        			.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        			.addComponent(lblInfo)
+        			.addPreferredGap(ComponentPlacement.UNRELATED)
+        			.addGroup(layout.createParallelGroup(Alignment.LEADING, false)
+        				.addGroup(layout.createSequentialGroup()
+        					.addGroup(layout.createParallelGroup(Alignment.LEADING)
+        						.addComponent(lblRodada)
+        						.addComponent(lblDificuldade, Alignment.TRAILING))
+        					.addPreferredGap(ComponentPlacement.RELATED)
+        					.addGroup(layout.createParallelGroup(Alignment.TRAILING)
+        						.addGroup(layout.createSequentialGroup()
+        							.addGap(0, 0, Short.MAX_VALUE)
+        							.addComponent(jcbDificuldade, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+        						.addGroup(layout.createSequentialGroup()
+        							.addGroup(layout.createParallelGroup(Alignment.LEADING)
+        								.addComponent(lblNomeJogador, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+        								.addComponent(lblPontuacao))
+        							.addGap(0, 0, Short.MAX_VALUE))))
+        				.addComponent(btnIniciar, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        			.addPreferredGap(ComponentPlacement.UNRELATED)
+        			.addGroup(layout.createParallelGroup(Alignment.LEADING, false)
+        				.addGroup(layout.createSequentialGroup()
+        					.addGroup(layout.createParallelGroup(Alignment.BASELINE)
+        						.addComponent(btn1, GroupLayout.PREFERRED_SIZE, 137, GroupLayout.PREFERRED_SIZE)
+        						.addComponent(btn2, GroupLayout.PREFERRED_SIZE, 137, GroupLayout.PREFERRED_SIZE)
+        						.addComponent(btn3, GroupLayout.PREFERRED_SIZE, 137, GroupLayout.PREFERRED_SIZE))
+        					.addGap(15)
+        					.addGroup(layout.createParallelGroup(Alignment.BASELINE)
+        						.addComponent(btn4, GroupLayout.PREFERRED_SIZE, 137, GroupLayout.PREFERRED_SIZE)
+        						.addComponent(btn6, GroupLayout.PREFERRED_SIZE, 137, GroupLayout.PREFERRED_SIZE)
+        						.addComponent(btn5, GroupLayout.PREFERRED_SIZE, 137, GroupLayout.PREFERRED_SIZE))
+        					.addPreferredGap(ComponentPlacement.UNRELATED)
+        					.addGroup(layout.createParallelGroup(Alignment.LEADING)
+        						.addComponent(btn7, GroupLayout.PREFERRED_SIZE, 137, GroupLayout.PREFERRED_SIZE)
+        						.addGroup(layout.createParallelGroup(Alignment.BASELINE)
+        							.addComponent(btn8, GroupLayout.PREFERRED_SIZE, 137, GroupLayout.PREFERRED_SIZE)
+        							.addComponent(btn9, GroupLayout.PREFERRED_SIZE, 137, GroupLayout.PREFERRED_SIZE))))
+        				.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+        			.addContainerGap())
         );
+        getContentPane().setLayout(layout);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void addListenerToBtn (JButton btn) {
+    private void addListenerToBtn (JButton btn, Integer numeroBotao) {
         btn.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
-                btnMouseClicked(evt, btn);
+            	 btn.setBackground(Color.RED);
+            	 botoesClicadosUsuario.add(numeroBotao);
+            	 cont++;
+            	 
+            	 if (cont == rodada) {
+            		 acertou = controle.comparaBotoesClicados(botoesClicadosUsuario);
+            		 
+            		 if (acertou) {
+            			 pontuacao += controle.calculaPontuacao();
+            			 lblPontuacao.setText("Pontuação: " + pontuacao);
+            			 JOptionPane.showMessageDialog(rootPane, "Você acertou!");
+            			 
+            		 } else {
+            			 JOptionPane.showMessageDialog(rootPane, "Você errou!");
+            			 String nome = lblNomeJogador.getText();
+            			 listModel.addElement(nome + " - " + pontuacao);
+            			 PintarBotoes.listaOsNumeros.clear();
+            			 rodada = 0;
+            			 pontuacao = 0;
+                    	 lblPontuacao.setText("Pontuação: " + pontuacao);
+            		 }
+            	 }
+            	 PintarBotoes.pintarBotaoComDelay(btn, 250);
+            	 rodadaIniciada(false);
             }
             
         });
     }
 
-    private void btnMouseClicked(MouseEvent evt, JButton btn) {
-        btn.setBackground(Color.RED);
+    
+    private void btnIniciarActionPerformed(ActionEvent evt) {//GEN-FIRST:event_btnIniciarActionPerformed
+    	rodada++;
+    	rodadaIniciada(true);
+    	botoesClicadosUsuario = new ArrayList<>();
+    	Runnable run = () -> {
+    		JOptionPane.showMessageDialog(rootPane, "Agora é sua vez!");
+    	};
+    	int dificuldadeSelecionada = jcbDificuldade.getSelectedIndex();
+    	if (controle == null) {
+    		controle = new Controle(botoes);
+    		controle.setDificuldade(dificuldadeSelecionada + 1);
+    		controle.iniciar(run, rodada);
+    		
+    	} else {
+    		controle.setDificuldade(dificuldadeSelecionada + 1);
+    		controle.iniciar(run, rodada);
+    	}
+    	cont = 0;
+    	
+    	
     }
     
-    private void btnIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarActionPerformed
-    	// Controla que a rodada está em execução
-    	rodadaIniciada(true);
-    	// Prepara o array de botões
-    	// Chama o método piscarBotoes com um callback para quando terminar
-    	PintarBotoes.piscarBotoes(botoes, 500, () -> {
-    		// Esta parte será executada quando a animação terminar
-    		JOptionPane.showMessageDialog(rootPane, "Agora é sua vez!");
-    	});
-    }//GEN-LAST:event_btoIniciarActionPerformed
-    //Implemente o restante do código para controle de execução da rodada
     private void rodadaIniciada(boolean estado){
     	btnIniciar.setEnabled(!estado);
+    	lblRodada.setText("Rodada: " + rodada);
     }
+    
 
     /**
      * @param args the command line arguments
@@ -240,7 +290,14 @@ public class Tela extends JFrame {
     private JLabel lblInfo;
     private JList<String> jList1;
     private JScrollPane scrollPane;
-    private JTextField lblNameJodador;
+    private JTextField lblNomeJogador;
     private JButton[] botoes;
+    private Controle controle;
+    private Integer rodada = 0;
+    private Integer cont;
+    private List<Integer> botoesClicadosUsuario;
+    private boolean acertou;
+    private int pontuacao;
+    private DefaultListModel<String> listModel;
     // End of variables declaration//GEN-END:variables
 }

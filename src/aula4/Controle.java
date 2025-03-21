@@ -1,19 +1,48 @@
 package aula4;
 
+import java.util.List;
+
+import javax.swing.JButton;
+
 public class Controle {
 
+	private List<Integer> botoesPiscados;
     private int rodada;
-    private String dificuldade;
-    private double pontuacao;
+    private int dificuldade;
+    private JButton[] botoes;
 
-    public Controle(String dificuldade) {
-        this.dificuldade = dificuldade;
-        this.rodada = 1;
+    public Controle(JButton[] botoes) {
+        this.botoes = botoes;
+    }
+    
+    public void iniciar(Runnable message, int rodada){
+    	System.out.println(dificuldade);
+    	switch(dificuldade) {
+    	case(1) :
+    		botoesPiscados = PintarBotoes.piscarBotoes(botoes, 500, rodada, message);
+    		break;
+    	case(2) :
+    		botoesPiscados = PintarBotoes.piscarBotoes(botoes, 300, rodada, message);
+    		break;
+    	case(3) :
+    		botoesPiscados = PintarBotoes.piscarBotoes(botoes, 150, rodada, message);
+    		break;
+    	}
+    	
+    	this.rodada = rodada;
+    }
+    
+    public int calculaPontuacao() { 
+    	return rodada * dificuldade * 20; 
     }
 
-    private int[] rodarCores() {
-
-        return null;
+    public boolean comparaBotoesClicados(List<Integer> botoesClicadosUsuario) {
+    	for (int i = 0; i < rodada; i++) {
+    		if (botoesPiscados.get(i) != botoesClicadosUsuario.get(i)) {
+    			return false;
+    		}
+    	}
+        return true;
     }
 
     public int getRodada() {
@@ -22,19 +51,12 @@ public class Controle {
     public void setRodada(int rodada) {
         this.rodada = rodada;
     }
-    public String getDificuldade() {
+    public int getDificuldade() {
         return dificuldade;
     }
-    public void setDificuldade(String dificuldade) {
+    public void setDificuldade(int dificuldade) {
         this.dificuldade = dificuldade;
     }
-    public double getPontuacao() {
-        return pontuacao;
-    }
-    public void setPontuacao(double pontuacao) {
-        this.pontuacao = pontuacao;
-    }
-
     
 
 }
