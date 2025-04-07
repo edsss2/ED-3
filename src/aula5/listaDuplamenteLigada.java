@@ -5,10 +5,17 @@ public class listaDuplamenteLigada {
     private NoDuplo inicio;
     private NoDuplo fim;
     private int tamanho;
+    
+    public void addOrdenado(int valor, TipoOrdenacao tipo) {
+    	if (tipo == TipoOrdenacao.CRESCENTE) {
+    		
+    	}
+    }
 
     public void add (Object elemento, int index) {
-        if (index < 0 || index > tamanho) {
+    	if (index < 0 || index > tamanho) {
             System.out.println("Indice inválido");
+            return;
         }
         NoDuplo novoNo = new NoDuplo(elemento);
 
@@ -22,10 +29,7 @@ public class listaDuplamenteLigada {
             fim.setProximo(novoNo);
             fim = novoNo;
         } else {
-            NoDuplo atual = inicio;
-            for(int i = 0; i < index - 1; i++) {
-                atual = atual.getProximo();
-            }
+            NoDuplo atual = percorreLista(index);
 
             NoDuplo proximoNo = atual.getProximo();
             atual.setProximo(novoNo);
@@ -48,6 +52,49 @@ public class listaDuplamenteLigada {
             fim = novoNo;
         }
         tamanho++;
+    }
+    
+    public void remove(int index) {
+    	if (index < 0 || index >= tamanho) {
+    		System.out.println("Indice inválido");
+    		return;
+    	}
+    	NoDuplo atual = percorreLista(index);
+    	if(index == 0) {
+    		inicio = inicio.getProximo();
+    		inicio.setAnterior(null);
+    	} else if (index == tamanho - 1) {
+    		fim = fim.getAnterior();
+    		fim.setProximo(null);
+    	} else {
+    		NoDuplo proximoNo = atual.getProximo();
+    		NoDuplo noAnterior = atual.getAnterior();
+    		proximoNo.setAnterior(noAnterior);
+    		noAnterior.setProximo(proximoNo);
+    	}
+    	tamanho--;
+    }
+    
+    public String imprimirLista() {
+    	NoDuplo atual = inicio;
+    	String imprimir = "";
+    	for(int i = 0; i < tamanho; i++) {
+    		imprimir += atual.toString() + "+";
+    	}
+    	return imprimir;
+    }
+    
+    public int tamanhoLista() {
+    	return tamanho;
+    }
+
+    
+    private NoDuplo percorreLista(int index) {
+    	NoDuplo atual = inicio;
+    	for(int i = 0; i < index - 1; i++) {
+    		atual = atual.getProximo();
+    	}
+    	return atual;
     }
 
 
