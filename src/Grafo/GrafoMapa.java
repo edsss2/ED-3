@@ -1,4 +1,4 @@
-package Grafo;
+package grafo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +29,8 @@ public class GrafoMapa {
         } else {
             for(int i = 0; i < cruzamento.getRuas().size(); i++) {
                 cruzamento.getRuas().remove(i);
-                cruzamentos.remove(cruzamento);
-            }  
+            } 
+            cruzamentos.remove(cruzamento);
         }
     }
 
@@ -86,7 +86,7 @@ public class GrafoMapa {
         Cruzamento auxiliar = acharCruzamento(idCruzamento);
         System.out.println("Ruas que partem:");
         for(Rua rua : auxiliar.getRuas()) {
-            rua.toString();
+            System.out.println(rua.toString());
         }
 
         System.out.println("Ruas que chegam:");
@@ -95,23 +95,94 @@ public class GrafoMapa {
             for(int x = 0; x < 0; x++) {
                 Rua rua = cruzamento.getRuas().get(i);
                 if(rua.getDestino().equals(auxiliar)) {
-                    rua.toString();
+                	System.out.println(rua.toString());
                 }
             }
         }
 
     }
 
-    void percorrerProfundidade(int idOrigem) {
+    public float percorrer(int idOrigem, TipoBusca tipo) {
         Cruzamento origem = acharCruzamento(idOrigem);
-        percorrerProfundidade(origem);
+        float distanciaTotal = 0f;
+        List<Cruzamento> cruzamentosNoMapa = new ArrayList<>();
+        cruzamentosNoMapa.add(origem);
+        
+        
+        if(tipo == TipoBusca.LARGURA) {
+        	return percorrerLargura(distanciaTotal, cruzamentosNoMapa);
+        } else if(tipo == TipoBusca.PROFUNDIDADE) {
+        	return percorrerProfundidade(distanciaTotal, cruzamentosNoMapa);
+        } else {
+        	return distanciaTotal;
+        }
+        
     }
 
-    void percorrerProfundidade(Cruzamento origem) {
+    private float percorrerProfundidade(float distanciaTotal, List<Cruzamento> cruzamentosNaoVisitados) {
+    	//No inicio do método eu tiro o cruzamento origem do final da lista
+    	//Altero a variavel visitado para true
+    	//E imprimo ele no terminal
+    	Cruzamento origem = cruzamentosNaoVisitados.getLast();
+        origem.isVisitado = true;
+    	System.out.println(origem.toString());
+    	
+    	//Aqui eu removo a origem para não entrar em looping
+    	cruzamentosNaoVisitados.remove(origem);
+    	
+    	cruzamentosNaoVisitados = addCruzamentosNaoVisitados(origem, cruzamentosNaoVisitados);
+    	
+    	//If para encerrar a recursão
+    	if(cruzamentosNaoVisitados.isEmpty()) {
+    		return distanciaTotal;
+    	}
+    	
+        //For para somar a distancia da rua na variavel distancia total e por imprimir o nome da rua
         for(Rua rua : origem.getRuas()) {
-            rua.getDestino();
+        	if(cruzamentosNaoVisitados.getLast().equals(rua.getDestino())) {
+        		distanciaTotal += rua.getDistanciaTotal();
+        		System.out.println(rua.toString());
+        	}
         }
+        return percorrerProfundidade(distanciaTotal, cruzamentosNaoVisitados);
     }
+    
+    private float percorrerLargura(float distanciaTotal, List<Cruzamento> cruzamentosNaoVisitados) {
+    	Cruzamento origem = cruzamentosNaoVisitados.getFirst();
+    	origem.isVisitado = true;
+    	System.out.println(origem.toString());
+    	
+    	//Aqui eu removo a origem para não entrar em looping
+    	cruzamentosNaoVisitados.remove(origem);
+    	
+    	cruzamentosNaoVisitados = addCruzamentosNaoVisitados(origem, cruzamentosNaoVisitados);
+    	
+    	//If para encerrar a recursão
+    	if(cruzamentosNaoVisitados.isEmpty()) {
+    		return distanciaTotal;
+    	}
+    	
+    	for(Rua rua : origem.getRuas()) {
+        	if(cruzamentosNaoVisitados.getFirst().equals(rua.getDestino())) {
+        		distanciaTotal += rua.getDistanciaTotal();
+        		System.out.println(rua.toString());
+        	}
+        }
+    	
+    	return percorrerLargura(distanciaTotal, cruzamentosNaoVisitados);
+    }
+    
+    private List<Cruzamento> addCruzamentosNaoVisitados(Cruzamento origem, List<Cruzamento> cruzamentos) {
+    	//For para adicionar as ruas ainda não visitadas na lista
+        for(Rua rua : origem.getRuas()) {
+        	Cruzamento destino = rua.getDestino();
+            if(!destino.isVisitado) {
+            	cruzamentos.addLast(destino);
+            }
+        }
+        return cruzamentos;
+    }
+   
 
     private Cruzamento acharCruzamento(int idCruzamento) {
         for(Cruzamento cruzamento : cruzamentos) {

@@ -1,4 +1,4 @@
-package aula7;
+package aula7.arvoreSimples;
 
 public class No {
     No direita;
