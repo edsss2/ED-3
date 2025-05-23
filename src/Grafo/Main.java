@@ -8,9 +8,6 @@ public class Main {
 	
 	public static void main(String[] args) {
 		
-		
-		menuPrincipal();
-		
 	}
 	
 	public static void menuPrincipal() {
@@ -111,7 +108,7 @@ public class Main {
 	
 	private static void escolhaCruzamento(int escolha) {
 		switch (escolha) {
-		case 1 -> mapa.cadastrarCruzamento(pegarCoordenadas());
+		case 1 -> mapa.cadastrarCruzamento(pegarCoordenadas(), pegarIdCruzamento());
 		case 2 -> {
 			int id = pegarIdCruzamento();
 			System.out.println("Digite agora as novas coordenadas");

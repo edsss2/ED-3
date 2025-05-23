@@ -7,8 +7,8 @@ public class GrafoMapa {
 
     private List<Cruzamento> cruzamentos = new ArrayList<>();
     
-    public Cruzamento cadastrarCruzamento(int[] coordenadas){
-        Cruzamento cruzamento = new Cruzamento(coordenadas);
+    public Cruzamento cadastrarCruzamento(int[] coordenadas, int id){
+        Cruzamento cruzamento = new Cruzamento(coordenadas, id);
         cruzamentos.add(cruzamento);
         return cruzamento;
     }

@@ -40,16 +40,7 @@ public class GMA {
 //Imprimir os vertices Vizinhos
 	}
 	
-	private void addAresta(boolean check, String nomeOrig, String nomeDest) {
-		int indiceOrig = buscarVertices(nomeOrig);
-		int indiceDest = buscarVertices(nomeDest);
-		
-		for(int x = 0; x < indiceOrig; x++) {
-			for(int y = 0; y < arestas[0].length; y++) {
-				if()
-			}
-		}
-	}
+
 
 	private int buscarVertices(String nome) {
 		//Busca o Vertice pelo nome e retorna o índice

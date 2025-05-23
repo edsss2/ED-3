@@ -7,13 +7,13 @@ import java.util.List;
 public class Cruzamento {
     List<Rua> ruas = new ArrayList<>();
 
-    private int id = 0;
+    private int id;
     private int[] coordenadas;
     boolean isVisitado = false;
 
-    public Cruzamento(int[] coordenadas) {
+    public Cruzamento(int[] coordenadas, int id) {
         this.coordenadas = coordenadas;
-        id++;
+        this.id = id;
     }
 
     public List<Rua> getRuas() { 
